@@ -20,6 +20,7 @@ You probably expect (at the beginning of this list) some sort of classic masterp
 015. The Science of Interstellar - K. Thorne
 016. L'Herbe rouge - B. Vian
 017. The Hobbit, or There and Back Again - J. R. R. Tolkien
+018. Le Locataire chimérique - R. Topor
 ```
 
 I will update it gradually. Each week you will be able to find a new book on the list.
