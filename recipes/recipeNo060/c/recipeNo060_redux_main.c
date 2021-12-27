@@ -30,7 +30,7 @@ int main() {
   // or to pass this value to main, but I don't care.
   // This is just a sample. 
   options[0].optionString 
-    = "-Djava.class.path=./target:../target:./jar:./jar/log4j-api-2.12.1.jar:./jar/log4j-core-2.12.1.jar";
+    = "-Djava.class.path=./target:../target:./jar:./jar/log4j-api-2.17.0.jar:./jar/log4j-core-2.17.0.jar";
  
   // if you want to see how log4j is initialized, you can
   // always pass -Dlog4j.debug

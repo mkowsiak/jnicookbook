@@ -15,7 +15,7 @@ include ../Makefile.common
 all: main.$(ARCH) download_log4j compilejava
 
 compilejava:
-	$(JAVA_HOME)/bin/javac -cp jar/log4j-api-2.12.1.jar:jar/log4j-core-2.12.1.jar -d target java/recipeNo060/redux/Main.java
+	$(JAVA_HOME)/bin/javac -cp jar/log4j-api-2.17.0.jar:jar/log4j-core-2.17.0.jar -d target java/recipeNo060/redux/Main.java
 
 recipeNo060_redux_main.o: c/recipeNo060_redux_main.c
 	$(CC) -g -o lib/recipeNo060_redux_main.o -c c/recipeNo060_redux_main.c \
@@ -23,8 +23,8 @@ recipeNo060_redux_main.o: c/recipeNo060_redux_main.c
     	-I${JAVA_HOME}/include/$(ARCH)/ \
 
 download_log4j:
-	curl -s -L -z jar/log4j-api-2.12.1.jar -o jar/log4j-api-2.12.1.jar https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.12.1/log4j-api-2.12.1.jar
-	curl -s -L -z jar/log4j-core-2.12.1.jar -o jar/log4j-core-2.12.1.jar https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-core/2.12.1/log4j-core-2.12.1.jar
+	curl -s -L -z jar/log4j-api-2.17.0.jar -o jar/log4j-api-2.17.0.jar https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.17.0/log4j-api-2.17.0.jar
+	curl -s -L -z jar/log4j-core-2.17.0.jar -o jar/log4j-core-2.17.0.jar https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-core/2.17.0/log4j-core-2.17.0.jar
 
 main.darwin: recipeNo060_redux_main.o
 	ld -o lib/recipeNo060_redux_main \
@@ -41,8 +41,8 @@ test:
 	lib/recipeNo060_redux_main
 
 clean: clean-common
-	$(call rm-test,jar/log4j-api-2.12.1.jar)
-	$(call rm-test,jar/log4j-core-2.12.1.jar)
+	$(call rm-test,jar/log4j-api-2.17.0.jar)
+	$(call rm-test,jar/log4j-core-2.17.0.jar)
 
 include ../Makefile.clean
 
