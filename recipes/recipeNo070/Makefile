@@ -1,0 +1,37 @@
+#
+# Copyright © 2015-2022 Michal K. Owsiak. All rights reserved.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+
+include ../Makefile.common
+include ../Makefile.jna
+
+all: download_jna compilec compilejava
+
+dirs:
+	mkdir -p jar
+
+compilec:
+	cc -Wpadded -g -O0 -shared -fpic -I${JAVA_HOME}/include -I${JAVA_HOME}/include/$(ARCH) c/recipeNo070_redux.c -o lib/libRecipeNo070.$(EXT)
+
+compilejava:
+	$(JAVA_HOME)/bin/javac -cp "./jar/jna.jar:target" -d target java/recipeNo070/redux/DataStruct.java
+	$(JAVA_HOME)/bin/javac -cp "./jar/jna.jar:target" -d target java/recipeNo070/redux/Main.java
+
+download_jna: dirs
+	$(call download-jna)
+
+test:
+	$(JAVA_HOME)/bin/java -Djava.library.path=$(LD_LIBRARY_PATH):./lib -cp ./lib:target:./jar/jna.jar recipeNo070.redux.Main
+
+clean: clean-common
+	$(call rm-test,jar)
+
+include ../Makefile.clean

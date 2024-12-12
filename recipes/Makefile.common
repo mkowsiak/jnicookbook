@@ -1,0 +1,81 @@
+#
+# Copyright © 2015-2022 Michal K. Owsiak. All rights reserved.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+
+# Remove file macro
+
+define rm-test
+    @test -z "$1" || rm -rf "$1"
+endef
+
+# Depending on architecture we want to use either
+# dylib or so for library extention
+#
+ARCH=$(shell uname -s | tr '[:upper:]' '[:lower:]')
+ifeq ($(ARCH),darwin)
+  EXT=dylib
+else
+  EXT=so
+endif
+
+# Since release 9 of JDK, server is no longer
+# part of jre. We have to look for it inside
+# lib/server instead of jre/lib/server
+# however, for jdk 1.8 we still have to look inside
+# jre - this is why we have this fancy directory
+# checking here
+#
+JAVA_SERVER_DIR=${JAVA_HOME}/jre/lib/server
+ifneq "$(wildcard $(JAVA_SERVER_DIR) )" ""
+  JAVA_SERVER_LIB=${JAVA_HOME}/jre/lib/server
+else
+  JAVA_SERVER_LIB=${JAVA_HOME}/lib/server
+endif
+
+# We have to tweak recipeNo033 location so we can run
+# it wither from recipeNo033 or from one level above
+RECIPENO33=$(PWD)/recipeNo033
+ifneq "$(wildcard $(RECIPENO33) )" ""
+  RECIPENO33=$(PWD)/recipeNo033/lib/
+else
+  RECIPENO33=$(PWD)/lib/
+endif
+
+
+# depending on architecture we have to set linker settings
+# while linking with libjvm.so/libjvm.dylib
+# Be careful with mac os!!
+#
+# If you don't use -rpath while linking, your code
+# will be linked with /usr/local/lib/libjvm.dylib
+# This will be a dissaster if your custom installation
+# inside /Library/Java/JavaVirtualMachines/
+#
+ifeq ($(ARCH),darwin)
+  CC=clang
+  CXX=clang++
+  LD_FLAGS_JAVA=-L${JAVA_SERVER_LIB} -rpath ${JAVA_SERVER_LIB} -ljvm
+  LD_FLAGS=-L/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib
+  LD_FLAGS+=-arch x86_64 
+  LD_FLAGS+=-macosx_version_min 11.1 -lSystem
+  LD_FLAGS+=$(LD_FLAGS_JAVA)
+  FOUNDATION_FRAMEWORK=-F/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/
+  FOUNDATION_FRAMEWORK+=-framework Foundation
+
+else
+  CC=gcc
+  CXX=g++
+  LD_FLAGS=-Wl,-rpath,${JAVA_SERVER_LIB} -L${JAVA_SERVER_LIB} -ljvm
+endif
+
+JVM_INCLUDE=-I${JAVA_HOME}/include -I${JAVA_HOME}/include/$(ARCH) \
+
+

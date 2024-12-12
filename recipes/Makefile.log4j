@@ -1,0 +1,30 @@
+#
+# Copyright © 2015-2022 Michal K. Owsiak. All rights reserved.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+
+# Targets for downloading and linking log4j jar files
+
+LOG4J_API_VER=2.17.0
+LOG4J_CORE_VER=2.17.0
+
+LOG4J_API_JAR=log4j-api-$(LOG4J_API_VER).jar
+LOG4J_CORE_JAR=log4j-core-$(LOG4J_CORE_VER).jar
+
+LOG4J_API_MVN=https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/$(LOG4J_API_VER)/$(LOG4J_API_JAR)
+LOG4J_CORE_MVN=https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-core/$(LOG4J_CORE_VER)/$(LOG4J_CORE_JAR)
+
+define download-log4j
+  curl -s -L -z jar/$(LOG4J_API_JAR)  -o jar/$(LOG4J_API_JAR)  $(LOG4J_API_MVN)
+  curl -s -L -z jar/$(LOG4J_CORE_JAR) -o jar/$(LOG4J_CORE_JAR) $(LOG4J_CORE_MVN)
+  ln -sf $(LOG4J_API_JAR)  jar/log4j-api.jar
+  ln -sf $(LOG4J_CORE_JAR) jar/log4j-core.jar
+endef
+
